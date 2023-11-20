@@ -1,0 +1,193 @@
+INFO:root:Sucessfully added relation between Kod produktu
+INFO:root:Sucessfully added relation between Kod produktu
+INFO:root:Sucessfully added relation between Kod produktu
+INFO:root:Sucessfully added relation between Kod produktu
+INFO:root:Sucessfully added relation between Kod produktu
+INFO:root:Sucessfully added relation between Obudowa produktu
+INFO:root:Sucessfully added relation between Projekt PCB
+INFO:root:Sucessfully added relation between Projekt PCB
+INFO:root:Sucessfully added relation between Projekt frontu
+INFO:root:Sucessfully added relation between Prototyp PCB
+INFO:root:Sucessfully added relation between Program
+INFO:root:Sucessfully added relation between Naklejki opisowe
+INFO:root:Sucessfully added relation between Okablowanie sterownika
+INFO:root:Sucessfully added relation between Integracja Sinum
+INFO:root:Sucessfully added relation between Prototyp
+INFO:root:Sucessfully added relation between Prototyp
+INFO:root:Sucessfully added relation between Prototyp
+INFO:root:Sucessfully added relation between Wizualizacja
+INFO:root:Sucessfully added relation between Prototyp
+INFO:root:Sucessfully added relation between Etykieta
+INFO:root:Sucessfully added relation between Pomiary
+INFO:root:Sucessfully added relation between Testy programu
+INFO:root:Sucessfully added relation between Projekt obwoluty
+INFO:root:Sucessfully added relation between Naklejka znamionowa
+INFO:root:Sucessfully added relation between Projekt obwoluty
+INFO:root:Sucessfully added relation between Naklejka znamionowa
+INFO:root:Sucessfully added relation between Procedura testowania sterownika
+INFO:root:Sucessfully added relation between Instrukcje do sterownika
+INFO:root:Sucessfully added relation between Kod QR
+INFO:root:Sucessfully added relation between Partia próbna
+INFO:root:Sucessfully added relation between Dokumentacja techniczna
+INFO:root:Sucessfully added relation between Kod kreskowy
+INFO:root:Sucessfully added relation between Opakowanie kartonowe
+INFO:root:Sucessfully added relation between Wykonanie testera produkcyjnego
+INFO:root:Deleted task Gotowy produkt
+INFO:root:Deleted task Wykonanie testera produkcyjnego
+INFO:root:Deleted task Partia próbna
+INFO:root:Deleted task Dokumentacja techniczna
+INFO:root:Deleted task Procedura testowania sterownika
+INFO:root:Deleted task Naklejka znamionowa
+INFO:root:Deleted task Projekt obwoluty
+INFO:root:Deleted task Etykieta
+INFO:root:Deleted task Testy programu
+INFO:root:Deleted task Instrukcje do sterownika
+INFO:root:Deleted task Pomiary
+INFO:root:Deleted task Opakowanie kartonowe
+INFO:root:Deleted task Integracja Sinum
+INFO:root:Deleted task Prototyp
+INFO:root:Deleted task Program
+INFO:root:Deleted task Wizualizacja
+INFO:root:Deleted task Prototyp PCB
+INFO:root:Deleted task Naklejki opisowe
+INFO:root:Deleted task Projekt frontu
+INFO:root:Deleted task Kod kreskowy
+INFO:root:Deleted task Kod QR
+INFO:root:Deleted task Okablowanie sterownika
+INFO:root:Deleted task Projekt PCB
+INFO:root:Deleted task Obudowa produktu
+INFO:root:Deleted task Kod produktu
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Deleted task Gotowy produkt
+INFO:root:Deleted task Wykonanie testera produkcyjnego
+INFO:root:Deleted task Partia próbna
+INFO:root:Deleted task Dokumentacja techniczna
+INFO:root:Deleted task Procedura testowania sterownika
+INFO:root:Deleted task Naklejka znamionowa
+INFO:root:Deleted task Projekt obwoluty
+INFO:root:Deleted task Etykieta
+INFO:root:Deleted task Testy programu
+INFO:root:Deleted task Instrukcje do sterownika
+INFO:root:Deleted task Pomiary
+INFO:root:Deleted task Opakowanie kartonowe
+INFO:root:Deleted task Integracja Sinum
+INFO:root:Deleted task Prototyp
+INFO:root:Deleted task Program
+INFO:root:Deleted task Wizualizacja
+INFO:root:Deleted task Prototyp PCB
+INFO:root:Deleted task Naklejki opisowe
+INFO:root:Deleted task Projekt frontu
+INFO:root:Deleted task Kod kreskowy
+INFO:root:Deleted task Kod QR
+INFO:root:Deleted task Okablowanie sterownika
+INFO:root:Deleted task Projekt PCB
+INFO:root:Deleted task Obudowa produktu
+INFO:root:Deleted task Kod produktu
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Sucessfully added relation between Obudowa produktu and Kod produktu
+INFO:root:Sucessfully added relation between Projekt PCB and Kod produktu
+INFO:root:Sucessfully added relation between Okablowanie sterownika and Kod produktu
+INFO:root:Sucessfully added relation between Kod QR and Kod produktu
+INFO:root:Sucessfully added relation between Kod kreskowy and Kod produktu
+INFO:root:Sucessfully added relation between Projekt frontu and Obudowa produktu
+INFO:root:Sucessfully added relation between Naklejki opisowe and Projekt PCB
+INFO:root:Sucessfully added relation between Prototyp PCB and Projekt PCB
+INFO:root:Sucessfully added relation between Wizualizacja and Projekt frontu
+INFO:root:Sucessfully added relation between Program and Prototyp PCB
+INFO:root:Sucessfully added relation between Prototyp and Program
+INFO:root:Sucessfully added relation between Prototyp and Naklejki opisowe
+INFO:root:Sucessfully added relation between Prototyp and Okablowanie sterownika
+INFO:root:Sucessfully added relation between Prototyp and Integracja Sinum
+INFO:root:Sucessfully added relation between Opakowanie kartonowe and Prototyp
+INFO:root:Sucessfully added relation between Pomiary and Prototyp
+INFO:root:Sucessfully added relation between Instrukcje do sterownika and Prototyp
+INFO:root:Sucessfully added relation between Instrukcje do sterownika and Wizualizacja
+INFO:root:Sucessfully added relation between Testy programu and Prototyp
+INFO:root:Sucessfully added relation between Projekt obwoluty and Etykieta
+INFO:root:Sucessfully added relation between Naklejka znamionowa and Pomiary
+INFO:root:Sucessfully added relation between Procedura testowania sterownika and Testy programu
+INFO:root:Sucessfully added relation between Dokumentacja techniczna and Projekt obwoluty
+INFO:root:Sucessfully added relation between Dokumentacja techniczna and Naklejka znamionowa
+INFO:root:Sucessfully added relation between Partia próbna and Projekt obwoluty
+INFO:root:Sucessfully added relation between Partia próbna and Naklejka znamionowa
+INFO:root:Sucessfully added relation between Partia próbna and Procedura testowania sterownika
+INFO:root:Sucessfully added relation between Partia próbna and Instrukcje do sterownika
+INFO:root:Sucessfully added relation between Partia próbna and Kod QR
+INFO:root:Sucessfully added relation between Wykonanie testera produkcyjnego and Partia próbna
+INFO:root:Sucessfully added relation between Wykonanie testera produkcyjnego and Dokumentacja techniczna
+INFO:root:Sucessfully added relation between Etykieta and Kod kreskowy
+INFO:root:Sucessfully added relation between Etykieta and Opakowanie kartonowe
+INFO:root:Sucessfully added relation between Gotowy produkt and Wykonanie testera produkcyjnego

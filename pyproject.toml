@@ -1,0 +1,35 @@
+[tool.poetry]
+name = "redmine-management"
+version = "1.0.0"
+description = "Package to manage your redmine"
+authors = ["Wiktor Gladys"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+asttokens = "2.4.1"
+certifi = "2023.7.22"
+charset-normalizer = "3.3.2"
+colorama = "0.4.6"
+docker = "6.1.3"
+exceptiongroup = "1.1.3"
+executing = "2.0.1"
+icecream = "2.1.3"
+idna = "3.4"
+iniconfig = "2.0.0"
+packaging = "23.2"
+pluggy = "1.3.0"
+Pygments = "2.16.1"
+pytest = "7.4.3"
+python-redmine = "2.4.0"
+requests = "2.31.0"
+rocketchat-API = "1.31.0"
+six = "1.16.0"
+tomli = "2.0.1"
+urllib3 = "2.1.0"
+websocket-client = "1.6.4"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
