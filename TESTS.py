@@ -3,7 +3,7 @@ import pytest
 import adding_docker
 from icecream import ic
 # Configuration
-REDMINE_URL = "http://172.17.0.2:3000/"
+REDMINE_URL = "http://localhost:80"
 REDMINE_USERNAME = "admin"
 REDMINE_PASSWORD = "admin123"
 PROJECT_ID = "project"

@@ -191,3 +191,414 @@ INFO:root:Sucessfully added relation between Wykonanie testera produkcyjnego and
 INFO:root:Sucessfully added relation between Etykieta and Kod kreskowy
 INFO:root:Sucessfully added relation between Etykieta and Opakowanie kartonowe
 INFO:root:Sucessfully added relation between Gotowy produkt and Wykonanie testera produkcyjnego
+INFO:root:Deleted task Gotowy produkt
+INFO:root:Deleted task Wykonanie testera produkcyjnego
+INFO:root:Deleted task Partia próbna
+INFO:root:Deleted task Dokumentacja techniczna
+INFO:root:Deleted task Procedura testowania sterownika
+INFO:root:Deleted task Naklejka znamionowa
+INFO:root:Deleted task Projekt obwoluty
+INFO:root:Deleted task Etykieta
+INFO:root:Deleted task Testy programu
+INFO:root:Deleted task Instrukcje do sterownika
+INFO:root:Deleted task Pomiary
+INFO:root:Deleted task Opakowanie kartonowe
+INFO:root:Deleted task Integracja Sinum
+INFO:root:Deleted task Prototyp
+INFO:root:Deleted task Program
+INFO:root:Deleted task Wizualizacja
+INFO:root:Deleted task Prototyp PCB
+INFO:root:Deleted task Naklejki opisowe
+INFO:root:Deleted task Projekt frontu
+INFO:root:Deleted task Kod kreskowy
+INFO:root:Deleted task Kod QR
+INFO:root:Deleted task Okablowanie sterownika
+INFO:root:Deleted task Projekt PCB
+INFO:root:Deleted task Obudowa produktu
+INFO:root:Deleted task Kod produktu
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Cleaned rocket chat
+INFO:root:Sucessfully added task "Kodproduktu"
+INFO:root:Sucessfully added task "Obudowaproduktu"
+INFO:root:Sucessfully added task "ProjektPCB"
+INFO:root:Sucessfully added task "Okablowaniesterownika"
+INFO:root:Sucessfully added task "KodQR"
+INFO:root:Sucessfully added task "Kodkreskowy"
+INFO:root:Sucessfully added task "Projektfrontu"
+INFO:root:Sucessfully added task "Naklejkiopisowe"
+INFO:root:Sucessfully added task "PrototypPCB"
+INFO:root:Sucessfully added task "Wizualizacja"
+INFO:root:Sucessfully added task "Program"
+INFO:root:Sucessfully added task "Prototyp"
+INFO:root:Sucessfully added task "IntegracjaSinum"
+INFO:root:Sucessfully added task "Opakowaniekartonowe"
+INFO:root:Sucessfully added task "Pomiary"
+INFO:root:Sucessfully added task "Instrukcjedosterownika"
+INFO:root:Sucessfully added task "Testyprogramu"
+INFO:root:Sucessfully added task "Etykieta"
+INFO:root:Sucessfully added task "Projektobwoluty"
+INFO:root:Sucessfully added task "Naklejkaznamionowa"
+INFO:root:Sucessfully added task "Proceduratestowaniasterownika"
+INFO:root:Sucessfully added task "Dokumentacjatechniczna"
+INFO:root:Sucessfully added task "Partiapróbna"
+INFO:root:Sucessfully added task "Wykonanietesteraprodukcyjnego"
+INFO:root:Sucessfully added task "Gotowyprodukt"
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Cleaned rocket chat
+INFO:root:Deleted task "Gotowyprodukt"
+INFO:root:Deleted task "Wykonanietesteraprodukcyjnego"
+INFO:root:Deleted task "Partiapróbna"
+INFO:root:Deleted task "Dokumentacjatechniczna"
+INFO:root:Deleted task "Proceduratestowaniasterownika"
+INFO:root:Deleted task "Naklejkaznamionowa"
+INFO:root:Deleted task "Projektobwoluty"
+INFO:root:Deleted task "Etykieta"
+INFO:root:Deleted task "Testyprogramu"
+INFO:root:Deleted task "Instrukcjedosterownika"
+INFO:root:Deleted task "Pomiary"
+INFO:root:Deleted task "Opakowaniekartonowe"
+INFO:root:Deleted task "IntegracjaSinum"
+INFO:root:Deleted task "Prototyp"
+INFO:root:Deleted task "Program"
+INFO:root:Deleted task "Wizualizacja"
+INFO:root:Deleted task "PrototypPCB"
+INFO:root:Deleted task "Naklejkiopisowe"
+INFO:root:Deleted task "Projektfrontu"
+INFO:root:Deleted task "Kodkreskowy"
+INFO:root:Deleted task "KodQR"
+INFO:root:Deleted task "Okablowaniesterownika"
+INFO:root:Deleted task "ProjektPCB"
+INFO:root:Deleted task "Obudowaproduktu"
+INFO:root:Deleted task "Kodproduktu"
+INFO:root:Cleaned rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Tried to delete, but all tasks are already deleted
+INFO:root:Cleaned rocket chat
+INFO:root:Tried to delete, but all tasks are already deleted
+INFO:root:Cleaned rocket chat
+INFO:root:Deleted task "Gotowyprodukt"
+INFO:root:Deleted task "Wykonanietesteraprodukcyjnego"
+INFO:root:Deleted task "Partiapróbna"
+INFO:root:Deleted task "Dokumentacjatechniczna"
+INFO:root:Deleted task "Proceduratestowaniasterownika"
+INFO:root:Deleted task "Naklejkaznamionowa"
+INFO:root:Deleted task "Projektobwoluty"
+INFO:root:Deleted task "Etykieta"
+INFO:root:Deleted task "Testyprogramu"
+INFO:root:Deleted task "Instrukcjedosterownika"
+INFO:root:Deleted task "Pomiary"
+INFO:root:Deleted task "Opakowaniekartonowe"
+INFO:root:Deleted task "IntegracjaSinum"
+INFO:root:Deleted task "Prototyp"
+INFO:root:Deleted task "Program"
+INFO:root:Deleted task "Wizualizacja"
+INFO:root:Deleted task "PrototypPCB"
+INFO:root:Deleted task "Naklejkiopisowe"
+INFO:root:Deleted task "Projektfrontu"
+INFO:root:Deleted task "Kodkreskowy"
+INFO:root:Deleted task "KodQR"
+INFO:root:Deleted task "Okablowaniesterownika"
+INFO:root:Deleted task "ProjektPCB"
+INFO:root:Deleted task "Obudowaproduktu"
+INFO:root:Deleted task "Kodproduktu"
+INFO:root:Cleaned rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Okablowanie sterownika
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Kod QR
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Kod kreskowy
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Projekt frontu
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Naklejki opisowe
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Prototyp PCB
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Wizualizacja
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Program
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Prototyp
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Integracja Sinum
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Opakowanie kartonowe
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Pomiary
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Instrukcje do sterownika
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Testy programu
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Procedura testowania sterownika
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Dokumentacja techniczna
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Partia próbna
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Gotowy produkt
+WARNING:root:Trying to find task when there are not created yet
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Succesfully updated status of task Obudowa produktu 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Projekt PCB 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Okablowanie sterownika 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Kod QR 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Kod kreskowy 
+INFO:root:Sended message to rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Succesfully updated status of task Obudowa produktu 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Projekt PCB 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Okablowanie sterownika 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Kod QR 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Kod kreskowy 
+INFO:root:Sended message to rocket chat
+INFO:root:Cleaned rocket chat
+INFO:root:Succesfully updated status of task Obudowa produktu 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Projekt PCB 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Okablowanie sterownika 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Kod QR 
+INFO:root:Sended message to rocket chat
+INFO:root:Succesfully updated status of task Kod kreskowy 
+INFO:root:Sended message to rocket chat
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added task Kod produktu
+INFO:root:Sucessfully added task Obudowa produktu
+INFO:root:Sucessfully added task Projekt PCB
+INFO:root:Sucessfully added task Okablowanie sterownika
+INFO:root:Sucessfully added task Kod QR
+INFO:root:Sucessfully added task Kod kreskowy
+INFO:root:Sucessfully added task Projekt frontu
+INFO:root:Sucessfully added task Naklejki opisowe
+INFO:root:Sucessfully added task Prototyp PCB
+INFO:root:Sucessfully added task Wizualizacja
+INFO:root:Sucessfully added task Program
+INFO:root:Sucessfully added task Prototyp
+INFO:root:Sucessfully added task Integracja Sinum
+INFO:root:Sucessfully added task Opakowanie kartonowe
+INFO:root:Sucessfully added task Pomiary
+INFO:root:Sucessfully added task Instrukcje do sterownika
+INFO:root:Sucessfully added task Testy programu
+INFO:root:Sucessfully added task Etykieta
+INFO:root:Sucessfully added task Projekt obwoluty
+INFO:root:Sucessfully added task Naklejka znamionowa
+INFO:root:Sucessfully added task Procedura testowania sterownika
+INFO:root:Sucessfully added task Dokumentacja techniczna
+INFO:root:Sucessfully added task Partia próbna
+INFO:root:Sucessfully added task Wykonanie testera produkcyjnego
+INFO:root:Sucessfully added task Gotowy produkt
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation
+INFO:root:Sucessfully added relation

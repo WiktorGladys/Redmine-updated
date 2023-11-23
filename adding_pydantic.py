@@ -8,6 +8,7 @@ from datetime import date
 from typing import List, NamedTuple
 from redminelib import Redmine
 from icecream import ic
+from pydantic import BaseModel
 import docker
 from rocketchat_API.rocketchat import RocketChat
 
@@ -24,29 +25,32 @@ else:
     container: docker.models.containers.Container = client.containers.run(
         "configured", name="redmine_test", detach=True
     )
+class RedmineConfig(BaseModel):
+    url: str
+    username: str
+    password: str
+    project_id: str
+    status_id_complete: int
+    status_id_ready: int
+    tracker_id: int
+    priority_id: int
 
 
 class RedmineManager:
     """Class to manage a project"""
 
-    def __init__(
-        self,
-        url: str,
-        username: str,
-        password: str,
-        project_id: str,
-        status_id_complete: int,
-        status_id_ready: int,
-        tracker_id: int,
-        priority_id: int,
-    ) -> None:
-        self.redmine: Redmine = Redmine(url, username=username, password=password)
-        self.project_id: str = project_id
-        self.status_id_complete: int = status_id_complete
-        self.status_id_ready: int = status_id_ready
-        self.tracker_id: int = tracker_id
-        self.priority_id: int = priority_id
-        self.issues = self.redmine.issue.filter(project_id=project_id)
+    def __init__(self, config: RedmineConfig):
+        self.redmine = Redmine(
+            config.url,
+            username=config.username,
+            password=config.password
+        )
+        self.project_id = config.project_id
+        self.status_id_complete = config.status_id_complete
+        self.status_id_ready = config.status_id_ready
+        self.tracker_id = config.tracker_id
+        self.priority_id = config.priority_id
+        self.issues = self.redmine.issue.filter(project_id=config.project_id)
 
     def _create_task(self, name: str):
         """Creates Tasks"""
@@ -75,7 +79,7 @@ class RedmineManager:
 
     def prepare_list(self) -> List[NamedTuple]:
         """Prepares List from graph on wiki"""
-        wiki_page = self.redmine.wiki_page.get("Wiki", project_id=self.project_id)
+        wiki_page = self.redmine.wiki_page.get("Foo", project_id=self.project_id)
         list_process: str = wiki_page.text
         list_process = list_process.replace('"', "")
         list_process = list_process.replace("\n", "")
@@ -206,6 +210,7 @@ class RedmineManager:
                 and issue_second.status.id != self.status_id_ready
                 and issue_second.status.id != self.status_id_complete
             ):
+                ic(123)
                 number_of_completed_tasks = self._check_status(issue_second.subject)
             if number_of_completed_tasks == self.get_number(issue_second.subject):
                 issue_second.status_id = self.status_id_ready
@@ -218,10 +223,10 @@ class RedmineManager:
 
 
 # Configuration
-REDMINE_URL: str = "http://localhost:80"
+REDMINE_URL: str = "http://172.17.0.2:3000/"
 REDMINE_USERNAME: str = "admin"
 REDMINE_PASSWORD: str = "admin123"
-PROJECT_ID: str = "project"
+PROJECT_ID: str = "testing"
 STATUS_ID_COMPLETE: int = 4
 STATUS_ID_READY: int = 3
 STATUS_ID_NEW: int = 1
@@ -229,22 +234,22 @@ TRACKER_ID: int = 1
 PRIORITY_ID: int = 1
 ROOM_ID: str = "aQTNDBmpk2jDXBCLTu7bXji4aeLzsMFCgE"
 OLDEST: str = "2016-05-30T13:42:25.304Z"
-redmine_manager: RedmineManager = RedmineManager(
-    REDMINE_URL,
-    REDMINE_USERNAME,
-    REDMINE_PASSWORD,
-    PROJECT_ID,
-    STATUS_ID_COMPLETE,
-    STATUS_ID_READY,
-    TRACKER_ID,
-    PRIORITY_ID,
+redmine_config = RedmineConfig(
+    url = REDMINE_URL,
+    username = REDMINE_USERNAME,
+    password = REDMINE_PASSWORD,
+    project_id = PROJECT_ID,
+    status_id_complete = STATUS_ID_COMPLETE,
+    status_id_ready = STATUS_ID_READY,
+    tracker_id = TRACKER_ID,
+    priority_id = PRIORITY_ID,
 )
-
+redmine_manager = RedmineManager(redmine_config)
 # INITIALIZATION
 list_: List[NamedTuple] = redmine_manager.prepare_list()
 # ic(list_)
 # redmine_manager.delete_all()
-redmine_manager.init_project()
+# redmine_manager.init_project()
 # redmine_manager.init_relations()
-# redmine_manager.update()
+redmine_manager.update()
 redmine_manager.clean_rocket_chat()

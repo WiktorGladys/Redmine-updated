@@ -9,14 +9,14 @@ from icecream import ic
 import docker
 from rocketchat_API.rocketchat import RocketChat
 
-rocket = RocketChat("wiktor_gladys", "admin123", server_url="http://172.17.0.4:3000")
+rocket = RocketChat("wiktor_gladys", "admin123", server_url="http://localhost:3000")
 logging.basicConfig(filename="example.log", encoding="utf-8", level=logging.INFO)
 # logging.basicConfig(filename="warns.log", encoding="utf-8", level=logging.WARNING)
 client = docker.from_env()
-if client.containers.get("3c155e01967d"):
-    pass
-else:
-    container = client.containers.run("configured", name="redmine_test", detach=True)
+# if client.containers.get("3c155e01967d"):
+#     pass
+# else:
+#     container = client.containers.run("configured", name="redmine_test", detach=True)
 
 
 class RedmineManager:
@@ -157,14 +157,14 @@ class RedmineManager:
         now = date.today()
         now = str(now)
         now = now + "T13:34:32.603Z"
-        rocket.rooms_clean_history(room_id=ROOM_ID, latest=now, oldest=OLDEST)
+        # rocket.rooms_clean_history(room_id=ROOM_ID, latest=now, oldest=OLDEST)
         logging.info("Cleaned rocket chat")
 
     def _send_message(self, id_of_issue):
         """Notification on rocket chat"""
-        rocket.chat_post_message(
-            f"Task o id {id_of_issue} jest Gotowy do realizacji", ROOM_ID
-        )
+        # rocket.chat_post_message(
+        #     f"Task o id {id_of_issue} jest Gotowy do realizacji", ROOM_ID
+        # )
         logging.info("Sended message to rocket chat")
 
     def delete_all(self):
@@ -205,7 +205,7 @@ class RedmineManager:
 
 
 # Configuration
-REDMINE_URL = "http://172.17.0.2:3000/"
+REDMINE_URL = "http://localhost:80"
 REDMINE_USERNAME = "admin"
 REDMINE_PASSWORD = "admin123"
 PROJECT_ID = "project"
@@ -214,7 +214,7 @@ STATUS_ID_READY = 3
 STATUS_ID_NEW = 1
 TRACKER_ID = 1
 PRIORITY_ID = 1
-ROOM_ID = "8PXbmuGqaDBF7LHHG9bqzNeAyjJGS6Y7Zr"
+ROOM_ID = "aQTNDBmpk2jDXBCLTu7bXji4aeLzsMFCgE"
 OLDEST = "2016-05-30T13:42:25.304Z"
 redmine_manager = RedmineManager(
     REDMINE_URL,
@@ -232,5 +232,5 @@ list_ = redmine_manager.prepare_list()
 # redmine_manager.delete_all()
 # redmine_manager.init_project()
 # redmine_manager.init_relations()
-redmine_manager.update()
+# redmine_manager.update()
 # redmine_manager.clean_rocket_chat()

@@ -8,11 +8,12 @@ from datetime import date
 from typing import List, NamedTuple
 from redminelib import Redmine
 from icecream import ic
+from pydantic import BaseModel
 import docker
 from rocketchat_API.rocketchat import RocketChat
 
 rocket: RocketChat = RocketChat(
-    "wiktor_gladys", "admin123", server_url="http://localhost:3000"
+    "wiktor_gladys", "admin123", server_url="http://172.27.0.2:3000"
 )
 logging.basicConfig(filename="example.log", encoding="utf-8", level=logging.INFO)
 # logging.basicConfig(filename="warns.log", encoding="utf-8", level=logging.WARNING)
@@ -25,30 +26,52 @@ else:
         "configured", name="redmine_test", detach=True
     )
 
+class RedmineConfig(BaseModel):
+    url: str
+    username: str
+    password: str
+    project_id: str
+    status_id_complete: int
+    status_id_ready: int
+    tracker_id: int
+    priority_id: int
+
 
 class RedmineManager:
     """Class to manage a project"""
 
-    def __init__(
-        self,
-        url: str,
-        username: str,
-        password: str,
-        project_id: str,
-        status_id_complete: int,
-        status_id_ready: int,
-        tracker_id: int,
-        priority_id: int,
+    def __init__(self, config: RedmineConfig):
+        self.redmine = Redmine(
+            config.url, username=config.username, password=config.password
+        )
+        self.project_id: str = config.project_id
+        self.tracker_id: int = config.tracker_id
+        self.priority_id: int = config.priority_id
+        self.status_id_ready: int = config.status_id_ready
+        self.status_id_complete: int = config.status_id_complete
+        self.issues = self.redmine.issue.filter(project_id=config.project_id)
+        self.list_ = self.prepare_list()
+    def create_user(
+        self, login: str, password: str, firstname: str, lastname: str, email: str
     ) -> None:
-        self.redmine: Redmine = Redmine(url, username=username, password=password)
-        self.project_id: str = project_id
-        self.status_id_complete: int = status_id_complete
-        self.status_id_ready: int = status_id_ready
-        self.tracker_id: int = tracker_id
-        self.priority_id: int = priority_id
-        self.issues = self.redmine.issue.filter(project_id=project_id)
+        self.redmine.user.create(
+            login=login,
+            password=password,
+            firstname=firstname,
+            lastname=lastname,
+            mail=email,
+        )
 
-    def _create_task(self, name: str):
+    def _create_new_version(self, version_name: str) -> None:
+        ic(self.project_id)
+        self.redmine.version.create(project_id=self.project_id, name=version_name)
+
+    def update_issues(self) -> None:
+        """Updates variable issues"""
+        self.issues = self.redmine.issue.filter(project_id=self.project_id)
+        ic(self.issues)
+
+    def _create_task(self, name: str) -> None:
         """Creates Tasks"""
         issue = self.redmine.issue.create(
             project_id=self.project_id,
@@ -73,9 +96,15 @@ class RedmineManager:
                 return id_of_searched_task
         return 0
 
+    def create_wiki_page(self, title: str) -> None:
+        f = open("graph.txt", "r")
+        ic(self.project_id)
+        self.redmine.wiki_page.create(project_id="testing", title=title, text=f.read())
+
     def prepare_list(self) -> List[NamedTuple]:
         """Prepares List from graph on wiki"""
-        wiki_page = self.redmine.wiki_page.get("Wiki", project_id=self.project_id)
+        ic(self.project_id)
+        wiki_page = self.redmine.wiki_page.get("Foo", project_id=self.project_id)
         list_process: str = wiki_page.text
         list_process = list_process.replace('"', "")
         list_process = list_process.replace("\n", "")
@@ -115,21 +144,24 @@ class RedmineManager:
     def init_project(self) -> None:
         """Initialize project from graph on wiki"""
         checking_list: List[str] = []
-        for elem in list_[: len(list_) - 1]:
+        self.update_issues()
+        for elem in self.list_[: len(self.list_) - 1]:
             self.check_if_in(elem.left, elem.right, checking_list)
+        self.update_issues()
 
     def init_relations(self) -> None:
         """Initializes relation creation"""
-        for elem in list_[: len(list_) - 1]:
+        for elem in self.list_[: len(self.list_) - 1]:
             first: int = self.find_task(elem.left)
             second: int = self.find_task(elem.right)
             self.create_relation(first, second)
             logging.info("Sucessfully added relation")
+        self.update_issues()
 
     def get_number(self, issue_subject: str) -> int:
         """Gets task, returns number of subtasks"""
         number: int = 0
-        for elem in list_[: len(list_) - 1]:
+        for elem in self.list_[: len(self.list_) - 1]:
             if issue_subject in elem.right:
                 number = number + 1
         return number
@@ -137,7 +169,7 @@ class RedmineManager:
     def get_ids(self, issue_subject: str) -> List[int]:
         """Gets task, returns IDs of  subtasks"""
         ids = []
-        for elem in list_[: len(list_) - 1]:
+        for elem in self.list_[: len(self.list_) - 1]:
             if issue_subject in elem.right:
                 ids.append(self.find_task(elem.left))
         return ids
@@ -145,7 +177,7 @@ class RedmineManager:
     def _check_status(self, issue_subject: str) -> int:
         """Gets task, returns number of completed subtasks"""
         number: int = 0
-        for elem in list_[: len(list_) - 1]:
+        for elem in self.list_[: len(self.list_) - 1]:
             if issue_subject in elem.right:
                 issue_get = self.redmine.issue.get(self.find_task(elem.left))
                 number += self._issue_status_check(issue_get)
@@ -180,22 +212,17 @@ class RedmineManager:
 
     def delete_all(self) -> None:
         """Deletes all issues"""
-        for elem in self.issues:
-            elem.delete()
-            logging.info("Deleted task %s", elem.subject)
-
-    # @property
-    # def get_issue(self, id_of_task: int):
-    #     """Returns issue of given ID"""
-    #     return self.redmine.issue.get(id_of_task)
-    # @property
-    # def get_issues(self):
-    #     """Returns all issues"""
-    #     return self.issues
+        if self.issues is not None:
+            for elem in self.issues:
+                elem.delete()
+                logging.info("Deleted task %s", elem.subject)
+        else:
+            print("First initialize project")
+            logging.info("Tried to delete when project is not initialized")
 
     def update(self) -> None:
         """Updates Redmine by reading graph from wiki"""
-        for elem in list_[: len(list_) - 1]:
+        for elem in self.list_[: len(self.list_) - 1]:
             first: int = self.find_task(elem.left)
             second: int = self.find_task(elem.right)
             issue = self.redmine.issue.get(first)
@@ -206,7 +233,9 @@ class RedmineManager:
                 and issue_second.status.id != self.status_id_ready
                 and issue_second.status.id != self.status_id_complete
             ):
+                ic(123456)
                 number_of_completed_tasks = self._check_status(issue_second.subject)
+                ic(number_of_completed_tasks)
             if number_of_completed_tasks == self.get_number(issue_second.subject):
                 issue_second.status_id = self.status_id_ready
                 issue_second.save()
@@ -217,34 +246,6 @@ class RedmineManager:
                 self._send_message(second)
 
 
-# Configuration
-REDMINE_URL: str = "http://localhost:80"
-REDMINE_USERNAME: str = "admin"
-REDMINE_PASSWORD: str = "admin123"
-PROJECT_ID: str = "project"
-STATUS_ID_COMPLETE: int = 4
-STATUS_ID_READY: int = 3
-STATUS_ID_NEW: int = 1
-TRACKER_ID: int = 1
-PRIORITY_ID: int = 1
+
 ROOM_ID: str = "aQTNDBmpk2jDXBCLTu7bXji4aeLzsMFCgE"
 OLDEST: str = "2016-05-30T13:42:25.304Z"
-redmine_manager: RedmineManager = RedmineManager(
-    REDMINE_URL,
-    REDMINE_USERNAME,
-    REDMINE_PASSWORD,
-    PROJECT_ID,
-    STATUS_ID_COMPLETE,
-    STATUS_ID_READY,
-    TRACKER_ID,
-    PRIORITY_ID,
-)
-
-# INITIALIZATION
-list_: List[NamedTuple] = redmine_manager.prepare_list()
-# ic(list_)
-# redmine_manager.delete_all()
-redmine_manager.init_project()
-# redmine_manager.init_relations()
-# redmine_manager.update()
-redmine_manager.clean_rocket_chat()

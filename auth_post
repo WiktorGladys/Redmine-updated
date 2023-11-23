@@ -1,0 +1,23 @@
+	
+utf8	"✓"
+authenticity_token	"END0njzVLN3shm6w66Vv5FPBOPiUHskc8WEogPqJS0gU5SFl6b3VNdehxa4HBRvxyTa2qPcYGzJOvLf4v9MmEQ=="
+tracker[name]	"dadwa"
+tracker[default_status_id]	"1"
+tracker[is_in_roadmap]	[…]
+0	"0"
+1	"1"
+tracker[description]	"dwad"
+tracker[core_fields][]	[…]
+0	"assigned_to_id"
+1	"category_id"
+2	"fixed_version_id"
+3	"parent_issue_id"
+4	"start_date"
+5	"due_date"
+6	"estimated_hours"
+7	"done_ratio"
+8	"description"
+9	""
+copy_workflow_from	""
+commit	"Create"
+tracker[project_ids][]	""
