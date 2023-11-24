@@ -3,6 +3,7 @@
     Author: Wiktor Glądys
 """
 from collections import namedtuple
+import random
 import logging
 from datetime import date
 from typing import List, NamedTuple
@@ -12,9 +13,6 @@ from pydantic import BaseModel
 import docker
 from rocketchat_API.rocketchat import RocketChat
 
-rocket: RocketChat = RocketChat(
-    "wiktor_gladys", "admin123", server_url="http://172.27.0.2:3000"
-)
 logging.basicConfig(filename="example.log", encoding="utf-8", level=logging.INFO)
 # logging.basicConfig(filename="warns.log", encoding="utf-8", level=logging.WARNING)
 client: docker.client.DockerClient = docker.from_env()
@@ -26,7 +24,9 @@ else:
         "configured", name="redmine_test", detach=True
     )
 
+
 class RedmineConfig(BaseModel):
+    """Base model used to create RedmineManager class"""
     url: str
     username: str
     password: str
@@ -35,8 +35,11 @@ class RedmineConfig(BaseModel):
     status_id_ready: int
     tracker_id: int
     priority_id: int
+    url_rockect: str
+    username_rocket: str
+    password_rocket: str
     oldest: str
-    room_id: str
+
 
 class RedmineManager:
     """Class to manage a project"""
@@ -45,15 +48,21 @@ class RedmineManager:
         self.redmine = Redmine(
             config.url, username=config.username, password=config.password
         )
+        self.rocket: RocketChat = RocketChat(
+            config.username_rocket,
+            config.password_rocket,
+            server_url=config.url_rockect,
+        )
         self.project_id: str = config.project_id
         self.tracker_id: int = config.tracker_id
         self.priority_id: int = config.priority_id
         self.status_id_ready: int = config.status_id_ready
         self.status_id_complete: int = config.status_id_complete
         self.oldest = config.oldest
-        self.room_id = config.room_id
         self.issues = self.redmine.issue.filter(project_id=config.project_id)
         self.list_ = self.prepare_list()
+        self.users = self.get_users()
+
     def create_user(
         self, login: str, password: str, firstname: str, lastname: str, email: str
     ) -> None:
@@ -66,6 +75,13 @@ class RedmineManager:
             mail=email,
         )
 
+    def create_memberships(self):
+        """Creates memberships for project"""
+        for elem in self.users:
+            self.redmine.project_membership.create(
+                project_id=self.project_id, user_id=elem, role_ids=[3, 5]
+            )
+
     def create_new_version(self, version_name: str) -> None:
         """Creates versions"""
         self.redmine.version.create(project_id=self.project_id, name=version_name)
@@ -77,16 +93,21 @@ class RedmineManager:
 
     def _create_task(self, name: str) -> None:
         """Creates Tasks"""
+        rand_num_from_list: int = random.choice(self.users)
+        ic(rand_num_from_list)
         issue = self.redmine.issue.create(
             project_id=self.project_id,
             subject=name,
             tracker_id=self.tracker_id,
             priority_id=self.priority_id,
+            assigned_to_id=rand_num_from_list,
         )
         return issue
 
     def create_relation(self, id_first: int, id_second: int) -> None:
         """Create relation between tasks"""
+        ic(id_first)
+        id(id_second)
         self.redmine.issue_relation.create(
             issue_id=id_second, issue_to_id=id_first, relation_type="blocked"
         )
@@ -99,8 +120,6 @@ class RedmineManager:
                 id_of_searched_task: int = getattr(elem, "id")
                 return id_of_searched_task
         return 0
-
-
 
     def prepare_list(self) -> List[NamedTuple]:
         """Prepares List from graph on wiki"""
@@ -116,6 +135,7 @@ class RedmineManager:
         for elem in list_completed[: len(list_completed) - 1]:
             temp_list = elem.split("->")
             new_list.append(task(temp_list[0].strip(), temp_list[1].strip()))
+        ic(new_list)
         return new_list
 
     def check_if_in(self, elem_left, elem_right, checking_list):
@@ -152,7 +172,7 @@ class RedmineManager:
 
     def init_relations(self) -> None:
         """Initializes relation creation"""
-        for elem in self.list_[: len(self.list_) - 1]:
+        for elem in self.list_:
             first: int = self.find_task(elem.left)
             second: int = self.find_task(elem.right)
             self.create_relation(first, second)
@@ -174,6 +194,16 @@ class RedmineManager:
             if issue_subject in elem.right:
                 ids.append(self.find_task(elem.left))
         return ids
+
+    def get_users(self):
+        """Returns user ids"""
+        users_ids = []
+        users = self.redmine.user.filter(project_id=self.project_id)
+        print(list(users))
+        for elem in users:
+            id_of_user = getattr(elem, "id")
+            users_ids.append(id_of_user)
+        return users_ids
 
     def _check_status(self, issue_subject: str) -> int:
         """Gets task, returns number of completed subtasks"""
@@ -197,19 +227,65 @@ class RedmineManager:
             file.write(f"Task o id {id_of_issue} jest Gotowy do realizacji\n")
             file.close()
 
+    def create_user_in_rocket_chat(self):
+        """Creates Users in rocket chat from redmine users"""
+        for elem in self.users:
+            user = self.redmine.user.get(elem)
+            self.rocket.users_create(
+                email=user.mail,
+                name=user.login,
+                password=user.firstname,
+                username=user.firstname + user.lastname,
+            )
+
     def clean_rocket_chat(self) -> None:
         """Cleans rocket bot chat"""
         now: str = str(date.today())
         now = now + "T13:34:32.603Z"
-        rocket.rooms_clean_history(room_id=self.room_id, latest=now, oldest=self.oldest)
+        data = self.rocket.rooms_get().json()
+        ic(data["update"][0]["_id"])
+        for elem in data["update"]:
+            self.rocket.rooms_clean_history(
+                elem["_id"], latest=now, oldest=self.oldest
+            )
         logging.info("Cleaned rocket chat")
 
-    def _send_message(self, id_of_issue: int) -> None:
+    def _send_message_to_all_users(self, message_body) -> None:
         """Notification on rocket chat"""
-        rocket.chat_post_message(
-            f"Task o id {id_of_issue} jest Gotowy do realizacji", self.room_id
-        )
-        logging.info("Sended message to rocket chat")
+        ic(self.rocket.rooms_get().json())
+        data = self.rocket.users_list().json()
+        user_id_rocketchat = []
+        for elem in data["users"]:
+            if "admin" in elem["roles"]:
+                id_admin = elem["_id"]
+            user_id_rocketchat.append(elem["_id"])
+        for elem in user_id_rocketchat:
+            if self.rocket.chat_post_message(message_body, elem + id_admin):
+                ic("True")
+            self.rocket.chat_post_message(message_body, id_admin + elem)
+
+    def get_admin_rocketchat(self):
+        """Returns rocketchat admin's id"""
+        data = self.rocket.users_list().json()
+        for elem in data["users"]:
+            if "admin" in elem["roles"]:
+                return elem["_id"]
+
+    def _send_message_to_single_user(self, id_of_issue: int, username: str) -> None:
+        data = self.rocket.users_list().json()
+        ic(self.rocket.rooms_get().json())
+        for elem in data["users"]:
+            if elem["username"] == username:
+                ic("wejscie")
+                id_admin = self.get_admin_rocketchat()
+                ic(id_admin)
+                ic(elem["_id"])
+                if self.rocket.chat_post_message(f"Task o id {id_of_issue} jest gotowy do realizacji",id_admin + elem["_id"],):
+                    logging.info("Sended message to User")
+                    return
+                self.rocket.chat_post_message(f"Task o id {id_of_issue} jest gotowy do realizacji",elem["_id"] + id_admin)
+                logging.info("Sended message to User")
+                return
 
     def delete_all(self) -> None:
         """Deletes all issues"""
@@ -220,7 +296,8 @@ class RedmineManager:
         else:
             print("First initialize project")
             logging.info("Tried to delete when project is not initialized")
-
+    def get_username(self, username_with_space: str) -> str:
+        return username_with_space.replace(" ", "")
     def update(self) -> None:
         """Updates Redmine by reading graph from wiki"""
         for elem in self.list_[: len(self.list_) - 1]:
@@ -230,12 +307,11 @@ class RedmineManager:
             issue_second = self.redmine.issue.get(second)
             number_of_completed_tasks: int = 0
             if (
-                issue.status.id == self.status_id_complete
-                and issue_second.status.id != self.status_id_ready
-                and issue_second.status.id != self.status_id_complete
+                issue.status.id is self.status_id_complete
+                and issue_second.status.id is not self.status_id_ready
+                and issue_second.status.id is not self.status_id_complete
             ):
                 number_of_completed_tasks = self._check_status(issue_second.subject)
-                ic(number_of_completed_tasks)
             else:
                 continue
             if number_of_completed_tasks == self.get_number(issue_second.subject):
@@ -245,8 +321,7 @@ class RedmineManager:
                     "Succesfully updated status of task %s ", issue_second.subject
                 )
                 self._notification(second)
-                self._send_message(second)
+                self._send_message_to_single_user(second, self.get_username(issue_second.assigned_to.name))
+                # self._send_message(second)
             else:
                 logging.info("No tasks to update!")
-
-
