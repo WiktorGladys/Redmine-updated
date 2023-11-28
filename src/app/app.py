@@ -10,23 +10,15 @@ from typing import List, NamedTuple
 from redminelib import Redmine
 from icecream import ic
 from pydantic import BaseModel
-import docker
 from rocketchat_API.rocketchat import RocketChat
 
 logging.basicConfig(filename="example.log", encoding="utf-8", level=logging.INFO)
 # logging.basicConfig(filename="warns.log", encoding="utf-8", level=logging.WARNING)
-client: docker.client.DockerClient = docker.from_env()
-
-if client.containers.get("3c155e01967d"):
-    pass
-else:
-    container: docker.models.containers.Container = client.containers.run(
-        "configured", name="redmine_test", detach=True
-    )
 
 
 class RedmineConfig(BaseModel):
     """Base model used to create RedmineManager class"""
+
     url: str
     username: str
     password: str
@@ -35,7 +27,7 @@ class RedmineConfig(BaseModel):
     status_id_ready: int
     tracker_id: int
     priority_id: int
-    url_rockect: str
+    url_rocket: str
     username_rocket: str
     password_rocket: str
     oldest: str
@@ -51,7 +43,7 @@ class RedmineManager:
         self.rocket: RocketChat = RocketChat(
             config.username_rocket,
             config.password_rocket,
-            server_url=config.url_rockect,
+            server_url=config.url_rocket,
         )
         self.project_id: str = config.project_id
         self.tracker_id: int = config.tracker_id
@@ -67,24 +59,36 @@ class RedmineManager:
         self, login: str, password: str, firstname: str, lastname: str, email: str
     ) -> None:
         """Creates User from args"""
-        self.redmine.user.create(
-            login=login,
-            password=password,
-            firstname=firstname,
-            lastname=lastname,
-            mail=email,
-        )
+        try:
+            self.redmine.user.create(
+                login=login,
+                password=password,
+                firstname=firstname,
+                lastname=lastname,
+                mail=email,
+            )
+            logging.info("User created successfully: %s", login)
+        except Exception as e:
+            logging.error("Error creating user %s: %s", login, str(e))
 
     def create_memberships(self):
         """Creates memberships for project"""
-        for elem in self.users:
-            self.redmine.project_membership.create(
-                project_id=self.project_id, user_id=elem, role_ids=[3, 5]
-            )
+        try:
+            for elem in self.users:
+                self.redmine.project_membership.create(
+                    project_id=self.project_id, user_id=elem, role_ids=[3, 5]
+                )
+            logging.info("Memberships created successfully.")
+        except Exception as e:
+            logging.error("Error creating memberships: %s", str(e))
 
     def create_new_version(self, version_name: str) -> None:
         """Creates versions"""
-        self.redmine.version.create(project_id=self.project_id, name=version_name)
+        try:
+            self.redmine.version.create(project_id=self.project_id, name=version_name)
+            logging.info("Version created successfully: %s", version_name)
+        except Exception as e:
+            logging.error("Error creating version %s: %s", version_name, str(e))
 
     def update_issues(self) -> None:
         """Updates variable issues"""
@@ -106,8 +110,6 @@ class RedmineManager:
 
     def create_relation(self, id_first: int, id_second: int) -> None:
         """Create relation between tasks"""
-        ic(id_first)
-        id(id_second)
         self.redmine.issue_relation.create(
             issue_id=id_second, issue_to_id=id_first, relation_type="blocked"
         )
@@ -225,7 +227,6 @@ class RedmineManager:
         """Notification"""
         with open("gotowe_do_realizacji.txt", "w", encoding="utf8") as file:
             file.write(f"Task o id {id_of_issue} jest Gotowy do realizacji\n")
-            file.close()
 
     def create_user_in_rocket_chat(self):
         """Creates Users in rocket chat from redmine users"""
@@ -245,9 +246,7 @@ class RedmineManager:
         data = self.rocket.rooms_get().json()
         ic(data["update"][0]["_id"])
         for elem in data["update"]:
-            self.rocket.rooms_clean_history(
-                elem["_id"], latest=now, oldest=self.oldest
-            )
+            self.rocket.rooms_clean_history(elem["_id"], latest=now, oldest=self.oldest)
         logging.info("Cleaned rocket chat")
 
     def _send_message_to_all_users(self, message_body) -> None:
@@ -270,6 +269,7 @@ class RedmineManager:
         for elem in data["users"]:
             if "admin" in elem["roles"]:
                 return elem["_id"]
+        return None
 
     def _send_message_to_single_user(self, id_of_issue: int, username: str) -> None:
         data = self.rocket.users_list().json()
@@ -280,48 +280,76 @@ class RedmineManager:
                 id_admin = self.get_admin_rocketchat()
                 ic(id_admin)
                 ic(elem["_id"])
-                if self.rocket.chat_post_message(f"Task o id {id_of_issue} jest gotowy do realizacji",id_admin + elem["_id"],):
+                if self.rocket.chat_post_message(
+                    f"Task o id {id_of_issue} jest gotowy do realizacji",
+                    id_admin + elem["_id"],
+                ):
                     logging.info("Sended message to User")
                     return
-                self.rocket.chat_post_message(f"Task o id {id_of_issue} jest gotowy do realizacji",elem["_id"] + id_admin)
+                self.rocket.chat_post_message(
+                    f"Task o id {id_of_issue} jest gotowy do realizacji",
+                    elem["_id"] + id_admin,
+                )
                 logging.info("Sended message to User")
                 return
 
     def delete_all(self) -> None:
         """Deletes all issues"""
-        if self.issues is not None:
-            for elem in self.issues:
-                elem.delete()
-                logging.info("Deleted task %s", elem.subject)
-        else:
-            print("First initialize project")
-            logging.info("Tried to delete when project is not initialized")
+        try:
+            if self.issues is not None:
+                for elem in self.issues:
+                    elem.delete()
+                    logging.info("Deleted task %s", elem.subject)
+            else:
+                raise ValueError(
+                    "Project not initialized. Please initialize the project first."
+                )
+        except Exception as e:
+            logging.error("Error deleting issues: %s", str(e))
+
     def get_username(self, username_with_space: str) -> str:
+        """Returns username without space"""
         return username_with_space.replace(" ", "")
+
+    def get_issue(self, id_of_task: int):
+        """Returns issue of given ID"""
+        return self.redmine.issue.get(id_of_task)
+
+    @property
+    def get_issues(self):
+        """Returns all issues"""
+        return self.issues
+
     def update(self) -> None:
         """Updates Redmine by reading graph from wiki"""
-        for elem in self.list_[: len(self.list_) - 1]:
-            first: int = self.find_task(elem.left)
-            second: int = self.find_task(elem.right)
-            issue = self.redmine.issue.get(first)
-            issue_second = self.redmine.issue.get(second)
-            number_of_completed_tasks: int = 0
-            if (
-                issue.status.id is self.status_id_complete
-                and issue_second.status.id is not self.status_id_ready
-                and issue_second.status.id is not self.status_id_complete
-            ):
-                number_of_completed_tasks = self._check_status(issue_second.subject)
-            else:
-                continue
-            if number_of_completed_tasks == self.get_number(issue_second.subject):
-                issue_second.status_id = self.status_id_ready
-                issue_second.save()
-                logging.info(
-                    "Succesfully updated status of task %s ", issue_second.subject
-                )
-                self._notification(second)
-                self._send_message_to_single_user(second, self.get_username(issue_second.assigned_to.name))
-                # self._send_message(second)
-            else:
-                logging.info("No tasks to update!")
+        try:
+            for elem in self.list_[: len(self.list_) - 1]:
+                first: int = self.find_task(elem.left)
+                second: int = self.find_task(elem.right)
+                issue = self.redmine.issue.get(first)
+                issue_second = self.redmine.issue.get(second)
+                number_of_completed_tasks: int = 0
+                if (
+                    issue.status.id is self.status_id_complete
+                    and issue_second.status.id is not self.status_id_ready
+                    and issue_second.status.id is not self.status_id_complete
+                ):
+                    number_of_completed_tasks = self._check_status(issue_second.subject)
+                else:
+                    continue
+                if number_of_completed_tasks == self.get_number(issue_second.subject):
+                    issue_second.status_id = self.status_id_ready
+                    issue_second.save()
+                    self.update_issues()
+                    logging.info(
+                        "Succesfully updated status of task %s ", issue_second.subject
+                    )
+                    self._notification(second)
+                    self._send_message_to_single_user(
+                        second, self.get_username(issue_second.assigned_to.name)
+                    )
+                    # self._send_message(second)
+                else:
+                    logging.info("No tasks to update!")
+        except Exception as e:
+            logging.error("Error updating Redmine: %s", str(e))

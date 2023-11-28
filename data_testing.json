@@ -1,15 +1,15 @@
 {
-    "REDMINE_URL": "http://172.17.0.2:3000/",
-    "REDMINE_USERNAME": "admin",
-    "REDMINE_PASSWORD": "admin123",
-    "ROCKETCHAT_URL": "http://172.18.0.2:3000",
-    "ROCKETCHAT_USERNAME": "wiktor_gladys",
-    "ROCKETCHAT_PASSWORD": "admin123",
-    "STATUS_ID_COMPLETE": 4,
-    "STATUS_ID_READY": 3,
-    "STATUS_ID_NEW": 1,
-    "TRACKER_ID": 1,
-    "PRIORITY_ID": 1,
-    "OLDEST": "2016-05-30T13:42:25.304Z"
+    "url": "http://192.168.100.5:3000/",
+    "username": "admin",
+    "password": "admin123",
+    "project_id" : "testing",
+    "url_rocket": "http://192.168.100.2:3000",
+    "username_rocket": "wiktor_gladys",
+    "password_rocket": "admin123",
+    "status_id_complete": 4,
+    "status_id_ready": 3,
+    "tracker_id": 1,
+    "priority_id": 1,
+    "oldest": "2016-05-30T13:42:25.304Z"
   }
   

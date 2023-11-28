@@ -49,9 +49,27 @@ services:
       test-network:
         ipv4_address: "192.168.100.5"
       bridge-network:
+    depends_on:
+      - rocketchat
     volumes:
       - volume-test:/usr/src/redmine/files
     restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://192.168.100.5:3000/"]
+      interval: "10s"
+      timeout: "5s"
+      retries: 5
+  app:
+    image: python_testing
+    networks:
+      test-network:
+        ipv4_address: "192.168.100.6"
+    volumes:
+      - .:/tmp/app
+    depends_on:
+      redmine:
+        condition: service_healthy
+
 
 
 networks:
@@ -64,6 +82,7 @@ networks:
       - subnet: 192.168.100.0/24
   bridge-network:
     driver: bridge
+    external: True
 
 volumes:
   test-vol:
