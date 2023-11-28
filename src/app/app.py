@@ -8,6 +8,7 @@ import logging
 from datetime import date
 from typing import List, NamedTuple
 from redminelib import Redmine
+from redminelib import exceptions
 from icecream import ic
 from pydantic import BaseModel
 from rocketchat_API.rocketchat import RocketChat
@@ -68,7 +69,7 @@ class RedmineManager:
                 mail=email,
             )
             logging.info("User created successfully: %s", login)
-        except Exception as e:
+        except exceptions.ResourceNoFieldsProvidedError as e:
             logging.error("Error creating user %s: %s", login, str(e))
 
     def create_memberships(self):
@@ -79,7 +80,7 @@ class RedmineManager:
                     project_id=self.project_id, user_id=elem, role_ids=[3, 5]
                 )
             logging.info("Memberships created successfully.")
-        except Exception as e:
+        except exceptions.ResourceNoFieldsProvidedError as e:
             logging.error("Error creating memberships: %s", str(e))
 
     def create_new_version(self, version_name: str) -> None:
@@ -87,7 +88,7 @@ class RedmineManager:
         try:
             self.redmine.version.create(project_id=self.project_id, name=version_name)
             logging.info("Version created successfully: %s", version_name)
-        except Exception as e:
+        except exceptions.ResourceNoFieldsProvidedError as e:
             logging.error("Error creating version %s: %s", version_name, str(e))
 
     def update_issues(self) -> None:
@@ -304,7 +305,7 @@ class RedmineManager:
                 raise ValueError(
                     "Project not initialized. Please initialize the project first."
                 )
-        except Exception as e:
+        except exceptions.ResourceNotFoundError as e:
             logging.error("Error deleting issues: %s", str(e))
 
     def get_username(self, username_with_space: str) -> str:
@@ -351,5 +352,5 @@ class RedmineManager:
                     # self._send_message(second)
                 else:
                     logging.info("No tasks to update!")
-        except Exception as e:
+        except exceptions.ResourceNotFoundError as e:
             logging.error("Error updating Redmine: %s", str(e))

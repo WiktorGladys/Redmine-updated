@@ -1,5 +1,6 @@
 import sys
 import json
+import redminelib
 from redminelib import Redmine
 from pydantic import BaseModel
 from icecream import ic
@@ -22,7 +23,7 @@ def create_wiki_page(title: str) -> None:
             redmine.wiki_page.create(project_id=redmine_config.project_id, title=title, text=f.read())
     except FileNotFoundError as e:
         print(f"File not found: {e}")
-    except Exception as e:
+    except redminelib.exceptions.ResourceNotFoundError as e:
         print(f"Error creating wiki page: {e}")
 
 
@@ -109,9 +110,9 @@ def test_auto_multi(delete_all_fix, project_init, project_init_relations):
     assert issue.status.id == redmine_config.status_id_ready
 
 
-def teardown():
-    redmine.project.delete(redmine_config.project_id)
-    redmine_manager.clean_rocket_chat()
+# def teardown():
+#     redmine.project.delete(redmine_config.project_id)
+#     redmine_manager.clean_rocket_chat()
 
 
 # update()
