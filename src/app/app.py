@@ -23,7 +23,8 @@ class RedmineConfig(BaseModel):
     url: str
     username: str
     password: str
-    project_id: str
+    key: str
+    project_name: str
     status_id_complete: int
     status_id_ready: int
     tracker_id: int
@@ -32,29 +33,35 @@ class RedmineConfig(BaseModel):
     username_rocket: str
     password_rocket: str
     oldest: str
+    wiki_page_name: str
 
 
 class RedmineManager:
     """Class to manage a project"""
 
     def __init__(self, config: RedmineConfig):
-        self.redmine = Redmine(
-            config.url, username=config.username, password=config.password
-        )
+        if config.key != "":
+            self.redmine = Redmine(
+                config.url, key=config.key
+            )
+        else:
+            self.redmine = Redmine(
+                config.url, username=config.username, password=config.password
+            )
         self.rocket: RocketChat = RocketChat(
             config.username_rocket,
             config.password_rocket,
             server_url=config.url_rocket,
         )
-        self.project_id: str = config.project_id
+        self.project_id: str = config.project_name.lower()
         self.tracker_id: int = config.tracker_id
         self.priority_id: int = config.priority_id
         self.status_id_ready: int = config.status_id_ready
         self.status_id_complete: int = config.status_id_complete
+        self.wiki_page_name: str = config.wiki_page_name
         self.oldest = config.oldest
-        self.issues = self.redmine.issue.filter(project_id=config.project_id)
+        self.issues = self.redmine.issue.filter(project_id=self.project_id)
         self.list_ = self.prepare_list()
-        self.users = self.get_users()
 
     def create_user(
         self, login: str, password: str, firstname: str, lastname: str, email: str
@@ -75,7 +82,7 @@ class RedmineManager:
     def create_memberships(self):
         """Creates memberships for project"""
         try:
-            for elem in self.users:
+            for elem in self.get_users():
                 self.redmine.project_membership.create(
                     project_id=self.project_id, user_id=elem, role_ids=[3, 5]
                 )
@@ -94,12 +101,11 @@ class RedmineManager:
     def update_issues(self) -> None:
         """Updates variable issues"""
         self.issues = self.redmine.issue.filter(project_id=self.project_id)
-        ic(self.issues)
+
 
     def _create_task(self, name: str) -> None:
         """Creates Tasks"""
-        rand_num_from_list: int = random.choice(self.users)
-        ic(rand_num_from_list)
+        rand_num_from_list: int = random.choice(self.get_users())
         issue = self.redmine.issue.create(
             project_id=self.project_id,
             subject=name,
@@ -126,8 +132,7 @@ class RedmineManager:
 
     def prepare_list(self) -> List[NamedTuple]:
         """Prepares List from graph on wiki"""
-        ic(self.project_id)
-        wiki_page = self.redmine.wiki_page.get("Foo", project_id=self.project_id)
+        wiki_page = self.redmine.wiki_page.get(self.wiki_page_name, project_id=self.project_id)
         list_process: str = wiki_page.text
         list_process = list_process.replace('"', "")
         list_process = list_process.replace("\n", "")
@@ -138,7 +143,6 @@ class RedmineManager:
         for elem in list_completed[: len(list_completed) - 1]:
             temp_list = elem.split("->")
             new_list.append(task(temp_list[0].strip(), temp_list[1].strip()))
-        ic(new_list)
         return new_list
 
     def check_if_in(self, elem_left, elem_right, checking_list):
@@ -202,7 +206,6 @@ class RedmineManager:
         """Returns user ids"""
         users_ids = []
         users = self.redmine.user.filter(project_id=self.project_id)
-        print(list(users))
         for elem in users:
             id_of_user = getattr(elem, "id")
             users_ids.append(id_of_user)
@@ -222,6 +225,7 @@ class RedmineManager:
         number: int = 0
         if issue.status.id == self.status_id_complete:
             number = 1
+            issue.status_id = 5
         return number
 
     def _notification(self, id_of_issue: int) -> None:
@@ -231,7 +235,7 @@ class RedmineManager:
 
     def create_user_in_rocket_chat(self):
         """Creates Users in rocket chat from redmine users"""
-        for elem in self.users:
+        for elem in self.get_users():
             user = self.redmine.user.get(elem)
             self.rocket.users_create(
                 email=user.mail,
@@ -252,7 +256,6 @@ class RedmineManager:
 
     def _send_message_to_all_users(self, message_body) -> None:
         """Notification on rocket chat"""
-        ic(self.rocket.rooms_get().json())
         data = self.rocket.users_list().json()
         user_id_rocketchat = []
         for elem in data["users"]:
@@ -260,8 +263,7 @@ class RedmineManager:
                 id_admin = elem["_id"]
             user_id_rocketchat.append(elem["_id"])
         for elem in user_id_rocketchat:
-            if self.rocket.chat_post_message(message_body, elem + id_admin):
-                ic("True")
+            self.rocket.chat_post_message(message_body, elem + id_admin)
             self.rocket.chat_post_message(message_body, id_admin + elem)
 
     def get_admin_rocketchat(self):
@@ -274,8 +276,9 @@ class RedmineManager:
 
     def _send_message_to_single_user(self, id_of_issue: int, username: str) -> None:
         data = self.rocket.users_list().json()
-        ic(self.rocket.rooms_get().json())
         for elem in data["users"]:
+            print(elem["username"])
+            print(username)
             if elem["username"] == username:
                 ic("wejscie")
                 id_admin = self.get_admin_rocketchat()
@@ -287,10 +290,11 @@ class RedmineManager:
                 ):
                     logging.info("Sended message to User")
                     return
-                self.rocket.chat_post_message(
+                else:
+                    self.rocket.chat_post_message(
                     f"Task o id {id_of_issue} jest gotowy do realizacji",
                     elem["_id"] + id_admin,
-                )
+                    )
                 logging.info("Sended message to User")
                 return
 
@@ -310,6 +314,7 @@ class RedmineManager:
 
     def get_username(self, username_with_space: str) -> str:
         """Returns username without space"""
+        print(username_with_space)
         return username_with_space.replace(" ", "")
 
     def get_issue(self, id_of_task: int):
@@ -345,6 +350,7 @@ class RedmineManager:
                     logging.info(
                         "Succesfully updated status of task %s ", issue_second.subject
                     )
+                    print(issue_second.assigned_to.name)
                     self._notification(second)
                     self._send_message_to_single_user(
                         second, self.get_username(issue_second.assigned_to.name)

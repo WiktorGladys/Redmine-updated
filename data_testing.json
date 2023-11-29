@@ -1,8 +1,8 @@
 {
     "url": "http://192.168.100.5:3000/",
     "username": "admin",
-    "password": "admin123",
-    "project_id" : "testing",
+    "password": "",
+    "key": "68cb9ed2a4f1413445588a0d9073f8a6b0f4044b",
     "url_rocket": "http://192.168.100.2:3000",
     "username_rocket": "wiktor_gladys",
     "password_rocket": "admin123",
@@ -10,6 +10,8 @@
     "status_id_ready": 3,
     "tracker_id": 1,
     "priority_id": 1,
-    "oldest": "2016-05-30T13:42:25.304Z"
+    "oldest": "2016-05-30T13:42:25.304Z",
+    "wiki_page_name": "",
+    "project_name": ""
   }
   
