@@ -8,7 +8,6 @@ cffi==1.16.0
 charset-normalizer==3.3.2
 dill==0.3.7
 docker==6.1.3
-docker-compose==1.29.2
 dockerpty==0.4.1
 docopt==0.6.2
 exceptiongroup==1.1.3
@@ -31,11 +30,9 @@ pydantic_core==2.14.3
 pylint==3.0.2
 pyrsistent==0.20.0
 pytest==7.4.3
-pytest-docker-compose==3.2.1
 python-dotenv==0.21.1
 python-redmine==2.4.0
 requests==2.31.0
-rocket-python==1.3.4
 rocketchat-API==1.31.0
 texttable==1.7.0
 tomli==2.0.1
