@@ -60,7 +60,7 @@ services:
       timeout: "5s"
       retries: 5
   app:
-    image: app_clean_env 
+    image: app_clean_env
     networks:
       test-network:
         ipv4_address: "192.168.100.6"
