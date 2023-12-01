@@ -179,7 +179,6 @@ def test_auto_multi(delete_all_fix, project_init, project_init_relations):
         issue_sub.save()
     redmine_manager.update()
     issue = find_issue_with_dependencies()
-    # assert 3 == 2
     assert issue.status.id == redmine_config.status_id_ready
     
 
