@@ -41,7 +41,7 @@ services:
       bash -c "sleep 10 && mongosh --host 192.168.100.3:27017 --eval 'printjson(rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"192.168.100.3:27017\"}]}))'"
   
   redmine:
-    image: configured
+    image: redmine_ready_to_use
     container_name: redmine_container
     ports:
       - "80:3000"
@@ -60,7 +60,7 @@ services:
       timeout: "5s"
       retries: 5
   app:
-    image: python_testing
+    image: python_test
     networks:
       test-network:
         ipv4_address: "192.168.100.6"
@@ -69,6 +69,7 @@ services:
     depends_on:
       redmine:
         condition: service_healthy
+
 
 
 

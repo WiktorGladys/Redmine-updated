@@ -1,8 +1,8 @@
 {
     "url": "http://192.168.100.5:3000/",
     "username": "admin",
-    "password": "",
-    "key": "68cb9ed2a4f1413445588a0d9073f8a6b0f4044b",
+    "password": "admin123",
+    "key": "fffc908369b7b07e6c42a9fea80e5f3f40dd12bc",
     "url_rocket": "http://192.168.100.2:3000",
     "username_rocket": "wiktor_gladys",
     "password_rocket": "admin123",

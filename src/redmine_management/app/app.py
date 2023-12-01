@@ -41,9 +41,7 @@ class RedmineManager:
 
     def __init__(self, config: RedmineConfig):
         if config.key != "":
-            self.redmine = Redmine(
-                config.url, key=config.key
-            )
+            self.redmine = Redmine(config.url, key=config.key)
         else:
             self.redmine = Redmine(
                 config.url, username=config.username, password=config.password
@@ -62,6 +60,133 @@ class RedmineManager:
         self.oldest = config.oldest
         self.issues = self.redmine.issue.filter(project_id=self.project_id)
         self.list_ = self.prepare_list()
+
+    # ROCKETCHAT RELATED
+    def create_user_in_rocket_chat(self):
+        """Creates Users in rocket chat from redmine users"""
+        for elem in self.get_users():
+            user = self.redmine.user.get(elem)
+            self.rocket.users_create(
+                email=user.mail,
+                name=user.login,
+                password=user.firstname,
+                username=user.firstname + user.lastname,
+            )
+
+    def clean_rocket_chat(self) -> None:
+        """Cleans rocket bot chat"""
+        now: str = str(date.today())
+        now = now + "T13:34:32.603Z"
+        data = self.rocket.rooms_get().json()
+        for elem in data["update"]:
+            self.rocket.rooms_clean_history(elem["_id"], latest=now, oldest=self.oldest)
+        logging.info("Cleaned rocket chat")
+
+    def _send_message_to_all_users(self, message_body) -> None:
+        """Notification on rocket chat"""
+        data = self.rocket.users_list().json()
+        user_id_rocketchat = []
+        for elem in data["users"]:
+            if "admin" in elem["roles"]:
+                id_admin = elem["_id"]
+            user_id_rocketchat.append(elem["_id"])
+        for elem in user_id_rocketchat:
+            self.rocket.chat_post_message(message_body, elem + id_admin)
+            self.rocket.chat_post_message(message_body, id_admin + elem)
+
+    def get_admin_rocketchat(self):
+        """Returns rocketchat admin's id"""
+        data = self.rocket.users_list().json()
+        for elem in data["users"]:
+            if "admin" in elem["roles"]:
+                return elem["_id"]
+        return None
+
+    def get_username(self, username_with_space: str) -> str:
+        """Returns username without space"""
+        return username_with_space.replace(" ", "")
+
+    def _send_message_to_single_user(self, id_of_issue: int, username: str) -> None:
+        data = self.rocket.users_list().json()
+        for elem in data["users"]:
+            if elem["username"] == username:
+                id_admin = self.get_admin_rocketchat()
+                if self.rocket.chat_post_message(
+                    f"Task o id {id_of_issue} jest gotowy do realizacji",
+                    id_admin + elem["_id"],
+                ):
+                    logging.info("Sended message to User")
+                    return
+                else:
+                    self.rocket.chat_post_message(
+                        f"Task o id {id_of_issue} jest gotowy do realizacji",
+                        elem["_id"] + id_admin,
+                    )
+                logging.info("Sended message to User")
+                return
+
+    # REDMINE RELATED
+    def create_project(self, name_of_project: str) -> None:
+        try:
+            self.redmine.project.create(
+                name=name_of_project, identifier=name_of_project.lower()
+            )
+        except Exception as e:
+            print(f"Error creating project: {e}")
+
+    def create_wiki_page(self, title: str, file_path: str) -> None:
+        try:
+            with open(file_path, "r") as f:
+                self.redmine.wiki_page.create(
+                    project_id=self.project_id,
+                    title=title,
+                    text=f.read(),
+                )
+        except FileNotFoundError as e:
+            print(f"File not found: {e}")
+        except exceptions.ResourceNotFoundError as e:
+            print(f"Error creating wiki page: {e}")
+
+    def init_project(self) -> None:
+        """Initialize project from graph on wiki"""
+        checking_list: List[str] = []
+        self.update_issues()
+        for elem in self.list_[: len(self.list_) - 1]:
+            self.check_if_in(elem.left, elem.right, checking_list)
+        self.update_issues()
+
+    def init_relations(self) -> None:
+        """Initializes relation creation"""
+        for elem in self.list_:
+            first: int = self.find_task(elem.left)
+            second: int = self.find_task(elem.right)
+            self.create_relation(first, second)
+            logging.info("Sucessfully added relation")
+        self.update_issues()
+
+    def _create_task(self, name: str) -> None:
+        """Creates Tasks"""
+        rand_num_from_list: int = random.choice(self.get_users())
+        print(name)
+        print(self.project_id)
+        issue = self.redmine.issue.create(
+            project_id=self.project_id,
+            subject=name,
+            tracker_id=self.tracker_id,
+            priority_id=self.priority_id,
+            assigned_to_id=rand_num_from_list,
+        )
+        return issue
+
+    def create_relation(self, id_first: int, id_second: int) -> None:
+        """Create relation between tasks"""
+        self.redmine.issue_relation.create(
+            issue_id=id_second, issue_to_id=id_first, relation_type="blocked"
+        )
+
+    def update_issues(self) -> None:
+        """Updates variable issues"""
+        self.issues = self.redmine.issue.filter(project_id=self.project_id)
 
     def create_user(
         self, login: str, password: str, firstname: str, lastname: str, email: str
@@ -98,41 +223,45 @@ class RedmineManager:
         except exceptions.ResourceNoFieldsProvidedError as e:
             logging.error("Error creating version %s: %s", version_name, str(e))
 
-    def update_issues(self) -> None:
-        """Updates variable issues"""
-        self.issues = self.redmine.issue.filter(project_id=self.project_id)
+    def create_another_project(
+        self, project_name: str, wiki_page_name: str, file_path: str
+    ) -> None:
+        try:
+            self.redmine.project.create(
+                name=project_name, identifier=project_name.lower()
+            )
+            self.project_id = project_name.lower()
+        except Exception as e:
+            print(f"Error creating project: {e}")
+        try:
+            with open(file_path, "r") as f:
+                self.redmine.wiki_page.create(
+                    project_id=project_name.lower(),
+                    title=wiki_page_name,
+                    text=f.read(),
+                )
+            self.wiki_page_name = wiki_page_name
+            self.list_ = self.prepare_list()
+        except FileNotFoundError as e:
+            print(f"File not found: {e}")
+        except exceptions.ResourceNotFoundError as e:
+            print(f"Error creating wiki page: {e}")
 
+    def init_all(self):
+        self.create_memberships()
+        self.init_project()
+        self.init_relations()
 
-    def _create_task(self, name: str) -> None:
-        """Creates Tasks"""
-        rand_num_from_list: int = random.choice(self.get_users())
-        issue = self.redmine.issue.create(
-            project_id=self.project_id,
-            subject=name,
-            tracker_id=self.tracker_id,
-            priority_id=self.priority_id,
-            assigned_to_id=rand_num_from_list,
-        )
-        return issue
-
-    def create_relation(self, id_first: int, id_second: int) -> None:
-        """Create relation between tasks"""
-        self.redmine.issue_relation.create(
-            issue_id=id_second, issue_to_id=id_first, relation_type="blocked"
-        )
-
-    def find_task(self, name_to_find: str) -> int:
-        """Takes Subject Name and returns its ID"""
-        for elem in self.issues:
-            name: str = getattr(elem, "subject")
-            if name_to_find == name:
-                id_of_searched_task: int = getattr(elem, "id")
-                return id_of_searched_task
-        return 0
+    def change_project(self, project_name_changed: str, wiki_page_name: str):
+        self.project_id = project_name_changed.lower()
+        self.wiki_page_name = wiki_page_name
+        self.list_ = self.prepare_list()
 
     def prepare_list(self) -> List[NamedTuple]:
         """Prepares List from graph on wiki"""
-        wiki_page = self.redmine.wiki_page.get(self.wiki_page_name, project_id=self.project_id)
+        wiki_page = self.redmine.wiki_page.get(
+            self.wiki_page_name, project_id=self.project_id
+        )
         list_process: str = wiki_page.text
         list_process = list_process.replace('"', "")
         list_process = list_process.replace("\n", "")
@@ -144,6 +273,15 @@ class RedmineManager:
             temp_list = elem.split("->")
             new_list.append(task(temp_list[0].strip(), temp_list[1].strip()))
         return new_list
+
+    def find_task(self, name_to_find: str) -> int:
+        """Takes Subject Name and returns its ID"""
+        for elem in self.issues:
+            name: str = getattr(elem, "subject")
+            if name_to_find == name:
+                id_of_searched_task: int = getattr(elem, "id")
+                return id_of_searched_task
+        return 0
 
     def check_if_in(self, elem_left, elem_right, checking_list):
         """Creates tasks"""
@@ -168,23 +306,6 @@ class RedmineManager:
                 self._create_task(elem_right)
                 logging.info("Sucessfully added task %s", elem_right)
                 checking_list.append(elem_right)
-
-    def init_project(self) -> None:
-        """Initialize project from graph on wiki"""
-        checking_list: List[str] = []
-        self.update_issues()
-        for elem in self.list_[: len(self.list_) - 1]:
-            self.check_if_in(elem.left, elem.right, checking_list)
-        self.update_issues()
-
-    def init_relations(self) -> None:
-        """Initializes relation creation"""
-        for elem in self.list_:
-            first: int = self.find_task(elem.left)
-            second: int = self.find_task(elem.right)
-            self.create_relation(first, second)
-            logging.info("Sucessfully added relation")
-        self.update_issues()
 
     def get_number(self, issue_subject: str) -> int:
         """Gets task, returns number of subtasks"""
@@ -233,71 +354,6 @@ class RedmineManager:
         with open("gotowe_do_realizacji.txt", "w", encoding="utf8") as file:
             file.write(f"Task o id {id_of_issue} jest Gotowy do realizacji\n")
 
-    def create_user_in_rocket_chat(self):
-        """Creates Users in rocket chat from redmine users"""
-        for elem in self.get_users():
-            user = self.redmine.user.get(elem)
-            self.rocket.users_create(
-                email=user.mail,
-                name=user.login,
-                password=user.firstname,
-                username=user.firstname + user.lastname,
-            )
-
-    def clean_rocket_chat(self) -> None:
-        """Cleans rocket bot chat"""
-        now: str = str(date.today())
-        now = now + "T13:34:32.603Z"
-        data = self.rocket.rooms_get().json()
-        ic(data["update"][0]["_id"])
-        for elem in data["update"]:
-            self.rocket.rooms_clean_history(elem["_id"], latest=now, oldest=self.oldest)
-        logging.info("Cleaned rocket chat")
-
-    def _send_message_to_all_users(self, message_body) -> None:
-        """Notification on rocket chat"""
-        data = self.rocket.users_list().json()
-        user_id_rocketchat = []
-        for elem in data["users"]:
-            if "admin" in elem["roles"]:
-                id_admin = elem["_id"]
-            user_id_rocketchat.append(elem["_id"])
-        for elem in user_id_rocketchat:
-            self.rocket.chat_post_message(message_body, elem + id_admin)
-            self.rocket.chat_post_message(message_body, id_admin + elem)
-
-    def get_admin_rocketchat(self):
-        """Returns rocketchat admin's id"""
-        data = self.rocket.users_list().json()
-        for elem in data["users"]:
-            if "admin" in elem["roles"]:
-                return elem["_id"]
-        return None
-
-    def _send_message_to_single_user(self, id_of_issue: int, username: str) -> None:
-        data = self.rocket.users_list().json()
-        for elem in data["users"]:
-            print(elem["username"])
-            print(username)
-            if elem["username"] == username:
-                ic("wejscie")
-                id_admin = self.get_admin_rocketchat()
-                ic(id_admin)
-                ic(elem["_id"])
-                if self.rocket.chat_post_message(
-                    f"Task o id {id_of_issue} jest gotowy do realizacji",
-                    id_admin + elem["_id"],
-                ):
-                    logging.info("Sended message to User")
-                    return
-                else:
-                    self.rocket.chat_post_message(
-                    f"Task o id {id_of_issue} jest gotowy do realizacji",
-                    elem["_id"] + id_admin,
-                    )
-                logging.info("Sended message to User")
-                return
-
     def delete_all(self) -> None:
         """Deletes all issues"""
         try:
@@ -311,11 +367,6 @@ class RedmineManager:
                 )
         except exceptions.ResourceNotFoundError as e:
             logging.error("Error deleting issues: %s", str(e))
-
-    def get_username(self, username_with_space: str) -> str:
-        """Returns username without space"""
-        print(username_with_space)
-        return username_with_space.replace(" ", "")
 
     def get_issue(self, id_of_task: int):
         """Returns issue of given ID"""
@@ -350,7 +401,6 @@ class RedmineManager:
                     logging.info(
                         "Succesfully updated status of task %s ", issue_second.subject
                     )
-                    print(issue_second.assigned_to.name)
                     self._notification(second)
                     self._send_message_to_single_user(
                         second, self.get_username(issue_second.assigned_to.name)

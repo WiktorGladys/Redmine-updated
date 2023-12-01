@@ -1,0 +1,93 @@
+version: '3.7'
+
+services:
+  rocketchat:
+    image: rocket.chat
+    container_name: rocketchat
+    networks:
+      test-network:
+        ipv4_address: "192.168.100.2"
+      bridge-network:
+    ports:
+      - "3000:3000"
+    volumes:
+      - test-vol:/app/uploads
+    depends_on:
+      - initiate-replica-set
+    restart: unless-stopped
+
+  db:
+    image: mongo
+    container_name: db
+    ports:
+      - 27017:27017
+    networks:
+      test-network:
+        ipv4_address: "192.168.100.3"
+    volumes:
+      - db_config:/data/configdb
+      - db:/data/db
+    entrypoint: ["/usr/bin/mongod","--bind_ip_all","--replSet", "rs0", "--oplogSize", "128"]
+    restart: unless-stopped
+
+  initiate-replica-set:
+    image: mongo
+    networks:
+      test-network:
+        ipv4_address: "192.168.100.4"
+    depends_on:
+      - db
+    command: >
+      bash -c "sleep 10 && mongosh --host 192.168.100.3:27017 --eval 'printjson(rs.initiate({_id: \"rs0\", members: [{_id: 0, host: \"192.168.100.3:27017\"}]}))'"
+  
+  redmine:
+    image: redmine_ready_to_use
+    container_name: redmine_container
+    ports:
+      - "80:3000"
+    networks:
+      test-network:
+        ipv4_address: "192.168.100.5"
+      bridge-network:
+    depends_on:
+      - rocketchat
+    volumes:
+      - volume-test:/usr/src/redmine/files
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://192.168.100.5:3000/"]
+      interval: "10s"
+      timeout: "5s"
+      retries: 5
+  app:
+    image: app_clean_env 
+    networks:
+      test-network:
+        ipv4_address: "192.168.100.6"
+    volumes:
+      - .:/tmp/app
+    depends_on:
+      redmine:
+        condition: service_healthy
+
+
+
+
+networks:
+  test-network:
+    driver: ipvlan
+    driver_opts:
+      parent: enp0s25
+    ipam:
+      config:
+      - subnet: 192.168.100.0/24
+  bridge-network:
+    driver: bridge
+    external: True
+
+volumes:
+  test-vol:
+  db:
+  db_config:
+  volume-test:
+
